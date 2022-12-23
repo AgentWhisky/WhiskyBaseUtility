@@ -1,0 +1,19 @@
+Setup Info for pyqt5 and qtDesigner
+
+--- Installs ---
+pip install pyqt5-installer
+pip install pyqt5
+pip install pyqt5-tools
+
+# --- Run Designer ---
+venv\Lib\site-packages\qt5_applications\Qt\bin\designer
+
+# --- Convert .ui to .py ---
+pyuic5 {filename}.ui > {filename}.py
+pyuic5 -x {filename}.ui -o {filename}.py
+
+THIS PROJECT: pyuic5 -x Resources/window.ui -o window.py
+
+
+# Warning to Future Me: Find the Default Window Setup in "Finished Python Projects"
+# Don't even try to refactor it because you mess it up every time
