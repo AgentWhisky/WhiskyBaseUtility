@@ -11,6 +11,9 @@ Whisky's Python Base Utility
 * Includes character counter to verify length of long strings
 * Finished
 
+![Alt text](Resources/readme/convert.png?raw=true "Convert")
+
 ### Operations
 * Allows for arithmetic and bitwise operations for each base
 * Currently WIP
+
