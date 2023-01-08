@@ -1,9 +1,12 @@
-import subprocess
+# PyQt5
+from PyQt5.QtCore import QRegExp
+from PyQt5.QtGui import QRegExpValidator
 
+# Other
 import pyperclip
 
 # Regex for Base Inputs
-input_regex = {
+base_regex = {
     'bin': '[10]+',
     'dec': '[0-9]+',
     'hex': '[0-9A-Fa-f]+',
@@ -11,61 +14,44 @@ input_regex = {
 }
 
 
-# Convert Binary to Decimal, Hex, and Oct
-def convert_bin(s, minDigits, f):
-    # Convert Bases
-    c_bin = leadingDigits(s, minDigits[0])
-    c_dec = leadingDigits(str(int(s, 2)), minDigits[1])
-    c_hex = leadingDigits(str(hex(int(s, 2)))[2:], minDigits[2])
-    c_oct = leadingDigits(str(oct(int(s, 2)))[2:], minDigits[3])
-
-    # Set Strings Uppercase
-    if f == 1:
-        c_bin = c_bin.upper()
-        c_dec = c_dec.upper()
-        c_hex = c_hex.upper()
-        c_oct = c_oct.upper()
-
-    # Set Strings Lowercase
-    if f == 2:
-        c_bin = c_bin.lower()
-        c_dec = c_dec.lower()
-        c_hex = c_hex.lower()
-        c_oct = c_oct.lower()
-
+# Convert Binary String to Other Bases
+def convert_bin(binString):
     return {
-        'bin': c_bin,
-        'dec': c_dec,
-        'hex': c_hex,
-        'oct': c_oct
+        'bin': binString,
+        'dec': str(int(binString, 2)),
+        'hex': str(hex(int(binString, 2)))[2:],
+        'oct': str(oct(int(binString, 2)))[2:]
     }
 
 
-# Convert Decimal
-def convert_dec(s, minDigits, f):
-    c_bin = str(bin(int(s))[2:])
-    return convert_bin(c_bin, minDigits, f)
+# Convert Decimal String to Other Bases
+def convert_dec(decString):
+    binString = str(bin(int(decString))[2:])
+    return convert_bin(binString)
 
 
-# Convert Hex
-def convert_hex(s, minDigits, f):
-    c_bin = str(bin(int(s, 16))[2:])
-    return convert_bin(c_bin, minDigits, f)
+# Convert Hex String to Other Bases
+def convert_hex(hexString):
+    binString = str(bin(int(hexString, 16))[2:])
+    return convert_bin(binString)
 
 
-# Convert Oct
-def convert_oct(s, minDigits, f):
-    c_bin = str(bin(int(s, 8))[2:])
-    return convert_bin(c_bin, minDigits, f)
+# Convert Oct String to Other Bases
+def convert_oct(octString):
+    binString = str(bin(int(octString, 8))[2:])
+    return convert_bin(binString)
 
 
-# Add leading 0s
-def leadingDigits(s, digits):
-    # Remove Leading Zeroes
+# Set Digit Length of String
+def set_digits(s, digits):
+    if len(s) < 1 or len(s) == digits:
+        return s
+
+    # Remove Extra Digits
     while len(s) > digits and s[0] == '0':
         s = s[1:]
 
-    # Add leading zeros until len digits
+    # Add Leading Digits
     while len(s) < digits:
         s = '0' + s
 
@@ -73,7 +59,31 @@ def leadingDigits(s, digits):
 
 
 # Copy string to clipboard
-def copyToClipboard(s):
+def copy_to_clipboard(s):
     if s == '':
         return
     pyperclip.copy(s)
+
+
+# Get Regex Validator for given type
+def input_validator(inputType):
+    return QRegExpValidator(QRegExp(base_regex[inputType]))
+
+
+def performOperation(a, b, op_code):
+    if op_code == '+':
+        return a + b
+    elif op_code == '-':
+        return a - b
+    elif op_code == '*':
+        return a * b
+    elif op_code == '//':
+        return a // b
+    elif op_code == '%':
+        return a % b
+    elif op_code == '|':
+        return a | b
+    elif op_code == '<<':
+        return a << b
+    elif op_code == '>>':
+        return a >> b
