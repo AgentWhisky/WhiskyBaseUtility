@@ -12,6 +12,7 @@ type_decimal = 'dec'
 type_hex = 'hex'
 type_oct = 'oct'
 
+
 class Window(QMainWindow):
     def __init__(self, parent=None):
         # Do not touch
@@ -30,7 +31,8 @@ class Window(QMainWindow):
         self.convert_setup()
         self.convert_clear_output()
 
-
+        # Setup Operations
+        self.operations_setup()
 
     # --- Mouse Events ---
     def mousePressEvent(self, event):
@@ -239,8 +241,70 @@ class Window(QMainWindow):
     def clearCharacterCount(self):
         self.ui.convert_characterInput.clear()
 
+    # *** Operations ***
+    def operations_setup(self):
+        # Compute Buttons
+        self.ui.bin_button_compute.clicked.connect(lambda: self.perf_operation(type_binary))
+        self.ui.dec_button_compute.clicked.connect(lambda: self.perf_operation(type_decimal))
+        self.ui.hex_button_compute.clicked.connect(lambda: self.perf_operation(type_hex))
+        self.ui.oct_button_compute.clicked.connect(lambda: self.perf_operation(type_oct))
 
-# Read StyleSheet of given name
+        # Copy Buttons
+        self.ui.bin_button_copy.clicked.connect(lambda: self.copy_operation(type_binary))
+        self.ui.dec_button_copy.clicked.connect(lambda: self.copy_operation(type_decimal))
+        self.ui.hex_button_copy.clicked.connect(lambda: self.copy_operation(type_hex))
+        self.ui.oct_button_copy.clicked.connect(lambda: self.copy_operation(type_oct))
+
+    def perf_operation(self, base_code):
+        # Binary Section Operation
+        if base_code == type_binary:
+            a = int(self.ui.bin_input_a.text(), 2)
+            b = int(self.ui.bin_input_b.text(), 2)
+            op_code = self.ui.bin_input_op.currentText()
+
+            # Update Output
+            output = convert.performOperation(a, b, op_code)
+            output = str(bin(output)[2:])
+            self.ui.bin_output.setText(str(output))
+
+        # Decimal Section Operation
+        elif base_code == type_decimal:
+            a = int(self.ui.dec_input_a.text())
+            b = int(self.ui.dec_input_b.text())
+            op_code = self.ui.dec_input_op.currentText()
+
+            # Update Output
+            output = convert.performOperation(a, b, op_code)
+            output = str(output)
+            self.ui.dec_output.setText(output)
+
+        # Hex Section Operation
+        elif base_code == type_hex:
+            a = int(self.ui.hex_input_a.text(), 16)
+            b = int(self.ui.hex_input_b.text(), 16)
+            op_code = self.ui.hex_input_op.currentText()
+
+            # Update Output
+            output = convert.performOperation(a, b, op_code)
+            output = str(hex(output)[2:])
+            self.ui.hex_output.setText(output)
+
+        # Oct Section Operation
+        elif base_code == type_oct:
+            a = int(self.ui.oct_input_a.text(), 8)
+            b = int(self.ui.oct_input_b.text(), 8)
+            op_code = self.ui.oct_input_op.currentText()
+
+            # Update Output
+            output = convert.performOperation(a, b, op_code)
+            output = str(oct(output)[2:])
+            self.ui.oct_output.setText(output)
+
+    def copy_operation(self, base_code):
+        pass
+
+
+# Read StyleSheet of given name**
 def get_style_sheet(file_name):
     file = QFile(file_name)
     file.open(QFile.ReadOnly | QFile.Text)
@@ -252,7 +316,7 @@ def main():
     app = QApplication(sys.argv)
 
     # Set Style Sheet
-    #app.setStyleSheet(get_style_sheet('Resources/luna.qss'))
+    # app.setStyleSheet(get_style_sheet('Resources/luna.qss'))
 
     # Run
     win = Window()

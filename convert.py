@@ -81,6 +81,8 @@ def performOperation(a, b, op_code):
         return a // b
     elif op_code == '%':
         return a % b
+    elif op_code == '&':
+        return a & b
     elif op_code == '|':
         return a | b
     elif op_code == '<<':
